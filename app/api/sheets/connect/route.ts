@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth, currentUser, clerkClient } from '@clerk/nextjs/server'
 import { GoogleSheetsService } from '@/lib/services/googleSheets.service'
 import { extractSheetId } from '@/lib/utils/sheetHelpers'
 import { connectSheetSchema } from '@/lib/utils/validators'
@@ -26,21 +26,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Get Google access token from Clerk
-    // Note: You need to implement proper token retrieval based on your Clerk setup
-    // This is a placeholder - see documentation for proper implementation
-    const googleAccount = user.externalAccounts?.find(a => a.provider === 'google')
-    const token = (googleAccount as any)?.accessToken
-    
-    if (!token) {
+    const client = await clerkClient()
+    const oauthTokensResponse = await client.users.getUserOauthAccessToken(userId, 'oauth_google')
+
+    if (!oauthTokensResponse.data || oauthTokensResponse.data.length === 0) {
       return NextResponse.json(
         { error: 'No Google access token found. Please reconnect your Google account.' },
         { status: 403 }
       )
     }
 
+    const token = oauthTokensResponse.data[0].token
+
     // Test access and initialize
     const sheetsService = new GoogleSheetsService(token, sheetId)
-    
+
     try {
       await sheetsService.listSheets()
     } catch (error: any) {
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     // Store sheet ID in user metadata
     const { setUserSheetId } = await import('@/lib/utils/clerkHelpers')
     await setUserSheetId(sheetId)
-    
+
     return NextResponse.json({
       success: true,
       sheet_id: sheetId,
@@ -81,7 +81,7 @@ export async function GET() {
     // Get from user metadata
     const { getUserSheetId } = await import('@/lib/utils/clerkHelpers')
     const sheetId = await getUserSheetId()
-    
+
     return NextResponse.json({
       sheet_id: sheetId,
       connected: !!sheetId

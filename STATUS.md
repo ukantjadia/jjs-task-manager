@@ -49,13 +49,13 @@
 ## 🚧 In Progress / TODO
 
 ### Frontend UI (Phase 6)
-- ⏳ Sheet connection form
-- ⏳ Task list component
-- ⏳ Task create/edit forms
-- ⏳ Filters component
-- ⏳ Projects management page
+- ✅ Sheet connection form
+- ✅ Task list component
+- ✅ Task create/edit forms
+- ✅ Filters component
+- ✅ Projects management page
+- ✅ Navigation menu
 - ⏳ Daily summary dashboard
-- ⏳ Navigation menu
 
 ### Polish & Testing (Phase 7)
 - ⏳ Error handling UI

@@ -69,30 +69,19 @@ export default function Home() {
         </SignedOut>
 
         <SignedIn>
-          <div className="bg-card rounded-lg shadow-lg border border-border p-6">
-            <h2 className="text-2xl font-bold text-foreground mb-4">
-              Dashboard
+          <div className="text-center py-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Welcome Back!
             </h2>
-            <p className="text-muted-foreground mb-4">
-              You're signed in! Next steps:
+            <p className="text-lg text-muted-foreground mb-8">
+              Ready to manage your tasks?
             </p>
-            <ol className="list-decimal list-inside space-y-2 text-foreground">
-              <li>Connect your Google Sheet</li>
-              <li>Create your first project</li>
-              <li>Start adding tasks</li>
-            </ol>
-            
-            <div className="mt-8 p-4 bg-muted rounded-md border border-border">
-              <h3 className="font-semibold text-foreground mb-2">Setup Instructions</h3>
-              <p className="text-sm text-muted-foreground">
-                Before you can use the app, you need to:
-              </p>
-              <ul className="list-disc list-inside text-sm text-muted-foreground mt-2 space-y-1">
-                <li>Connect your Google Sheet (or create a new one)</li>
-                <li>Create your first project with keywords</li>
-                <li>Start adding tasks with project prefixes</li>
-              </ul>
-            </div>
+            <Link 
+              href="/dashboard"
+              className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-medium"
+            >
+              Go to Dashboard →
+            </Link>
           </div>
         </SignedIn>
       </main>

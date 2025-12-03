@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth, currentUser, clerkClient } from '@clerk/nextjs/server'
 import { GoogleSheetsService } from '@/lib/services/googleSheets.service'
 import { ProjectService } from '@/lib/services/project.service'
 import { TaskService } from '@/lib/services/task.service'
@@ -11,7 +11,7 @@ async function getServices(sheetId: string, accessToken: string) {
   const projectService = new ProjectService(sheetsService)
   const taskService = new TaskService(sheetsService, projectService)
   const logService = new LogService(sheetsService, taskService)
-  
+
   return { logService }
 }
 
@@ -29,15 +29,17 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const sheetId = searchParams.get('sheet_id')
-    
+
     if (!sheetId) {
       return NextResponse.json({ error: 'Sheet ID required' }, { status: 400 })
     }
 
-    const token = await user.getOAuthAccessToken({ provider: 'oauth_google' })
-    if (!token) {
+    const client = await clerkClient()
+    const oauthTokensResponse = await client.users.getUserOauthAccessToken(userId, 'oauth_google')
+    if (!oauthTokensResponse.data || oauthTokensResponse.data.length === 0) {
       return NextResponse.json({ error: 'No Google access token' }, { status: 403 })
     }
+    const token = oauthTokensResponse.data[0].token
 
     const { logService } = await getServices(sheetId, token)
 

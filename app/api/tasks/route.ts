@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { auth, currentUser, clerkClient } from '@clerk/nextjs/server'
 import { GoogleSheetsService } from '@/lib/services/googleSheets.service'
 import { ProjectService } from '@/lib/services/project.service'
 import { TaskService } from '@/lib/services/task.service'
@@ -33,16 +33,17 @@ export async function GET(request: NextRequest) {
         const sheetId = await getSheetIdFromRequest(searchParams)
 
         if (!sheetId) {
-            return NextResponse.json({ 
-                error: 'Sheet ID required. Please connect a Google Sheet first.' 
+            return NextResponse.json({
+                error: 'Sheet ID required. Please connect a Google Sheet first.'
             }, { status: 400 })
         }
 
-        const googleAccount = user.externalAccounts?.find(a => a.provider === 'google')
-        const token = (googleAccount as any)?.accessToken
-        if (!token) {
+        const client = await clerkClient()
+        const oauthTokensResponse = await client.users.getUserOauthAccessToken(userId, 'oauth_google')
+        if (!oauthTokensResponse.data || oauthTokensResponse.data.length === 0) {
             return NextResponse.json({ error: 'No Google access token' }, { status: 403 })
         }
+        const token = oauthTokensResponse.data[0].token
 
         const { taskService } = await getServices(sheetId, token)
 
@@ -93,16 +94,17 @@ export async function POST(request: NextRequest) {
         const { getSheetIdFromRequest } = await import('@/lib/utils/clerkHelpers')
         const sheetId = await getSheetIdFromRequest(undefined, body)
         if (!sheetId) {
-            return NextResponse.json({ 
-                error: 'Sheet ID required. Please connect a Google Sheet first.' 
+            return NextResponse.json({
+                error: 'Sheet ID required. Please connect a Google Sheet first.'
             }, { status: 400 })
         }
 
-        const googleAccount = user.externalAccounts?.find(a => a.provider === 'google')
-        const token = (googleAccount as any)?.accessToken
-        if (!token) {
+        const client = await clerkClient()
+        const oauthTokensResponse = await client.users.getUserOauthAccessToken(userId, 'oauth_google')
+        if (!oauthTokensResponse.data || oauthTokensResponse.data.length === 0) {
             return NextResponse.json({ error: 'No Google access token' }, { status: 403 })
         }
+        const token = oauthTokensResponse.data[0].token
 
         const { taskService, logService } = await getServices(sheetId, token)
 

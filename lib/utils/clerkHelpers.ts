@@ -4,16 +4,22 @@ import { auth, currentUser, clerkClient } from '@clerk/nextjs/server'
  * Get the Google access token for the current user
  */
 export async function getGoogleAccessToken(): Promise<string | null> {
-  const user = await currentUser()
-  if (!user) return null
+  const { userId } = await auth()
+  if (!userId) return null
 
-  const googleAccount = user.externalAccounts?.find(
-    account => account.provider === 'google'
-  )
+  try {
+    const client = await clerkClient()
+    const oauthTokensResponse = await client.users.getUserOauthAccessToken(userId, 'oauth_google')
 
-  if (!googleAccount) return null
+    if (!oauthTokensResponse.data || oauthTokensResponse.data.length === 0) {
+      return null
+    }
 
-  return (googleAccount as any).accessToken || null
+    return oauthTokensResponse.data[0].token || null
+  } catch (error) {
+    console.error('Error getting Google access token:', error)
+    return null
+  }
 }
 
 /**
