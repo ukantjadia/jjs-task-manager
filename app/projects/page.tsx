@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 interface Project {
   project_id: string
@@ -36,7 +35,7 @@ export default function ProjectsPage() {
     try {
       const sheetResponse = await fetch('/api/sheets/connect')
       const sheetData = await sheetResponse.json()
-      
+
       if (sheetData.connected && sheetData.sheet_id) {
         setSheetId(sheetData.sheet_id)
         await fetchProjects(sheetData.sheet_id)
@@ -55,7 +54,7 @@ export default function ProjectsPage() {
     try {
       const response = await fetch(`/api/projects?sheet_id=${id}`)
       const data = await response.json()
-      
+
       if (response.ok) {
         setProjects(data.projects || [])
       }
@@ -66,30 +65,14 @@ export default function ProjectsPage() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center py-24">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-card shadow-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-            <div className="flex gap-4">
-              <Link href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
-                Dashboard
-              </Link>
-              <Link href="/summary" className="text-muted-foreground hover:text-foreground transition-colors">
-                Summary
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="bg-background">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-foreground">Projects</h2>
@@ -186,7 +169,7 @@ function CreateProjectModal({ sheetId, onClose, onCreated }: {
 
     try {
       const keywordArray = keywords.split(',').map(k => k.trim().toLowerCase()).filter(k => k)
-      
+
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

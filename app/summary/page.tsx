@@ -118,7 +118,7 @@ export default function SummaryPage() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center py-24">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading...</p>
@@ -129,30 +129,13 @@ export default function SummaryPage() {
 
   if (!sheetId) {
     return (
-      <div className="min-h-screen bg-background">
-        <nav className="bg-card shadow-sm border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-              <a href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
-                Dashboard
-              </a>
-            </div>
-          </div>
-        </nav>
-
+      <div className="bg-background">
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="bg-card border border-border rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-foreground mb-4">No Sheet Connected</h2>
-            <p className="text-muted-foreground mb-4">
+            <h2 className="text-2xl font-bold text-foreground mb-4 text-center">No Sheet Connected</h2>
+            <p className="text-muted-foreground mb-4 text-center">
               Please connect a Google Sheet first to view your summary.
             </p>
-            <a
-              href="/dashboard"
-              className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
-            >
-              Go to Dashboard
-            </a>
           </div>
         </main>
       </div>
@@ -160,32 +143,13 @@ export default function SummaryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-            <div className="flex gap-4">
-              <a href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
-                Dashboard
-              </a>
-              <a href="/projects" className="text-muted-foreground hover:text-foreground transition-colors">
-                Projects
-              </a>
-              <a href="/summary" className="text-foreground font-medium">
-                Summary
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+    <div className="bg-background">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-foreground mb-6">📊 Activity Summary</h2>
 
           {/* Date Range Selector */}
-          <div className="bg-card border border-border rounded-lg p-4 mb-6">
+          <div className="bg-card border border-border rounded-lg p-4 mb-6 inline-block text-left">
             <label className="block text-sm font-medium text-foreground mb-3">
               Date Range
             </label>

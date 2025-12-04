@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<FilterState>({ status: [] })
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+  const [showConnectSheet, setShowConnectSheet] = useState(false)
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -41,6 +42,8 @@ export default function DashboardPage() {
 
       if (data.connected && data.sheet_id) {
         setSheetId(data.sheet_id)
+      } else {
+        setShowConnectSheet(true)
       }
     } catch (err) {
       console.error('Error checking sheet connection:', err)
@@ -76,7 +79,7 @@ export default function DashboardPage() {
 
   if (!isLoaded || loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center py-24">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">Loading...</p>
@@ -85,48 +88,20 @@ export default function DashboardPage() {
     )
   }
 
-  if (!sheetId) {
-    return (
-      <div className="min-h-screen bg-background">
-        <nav className="bg-card shadow-sm border-b border-border">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16 items-center">
-              <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-            </div>
-          </div>
-        </nav>
-
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <SheetConnectForm />
-        </main>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-            <div className="flex gap-4">
-              <a href="/projects" className="text-muted-foreground hover:text-foreground transition-colors">
-                Projects
-              </a>
-              <a href="/summary" className="text-muted-foreground hover:text-foreground transition-colors">
-                Summary
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <div className="bg-background">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <TaskCreateForm sheetId={sheetId} onTaskCreated={fetchTasks} />
+        {showConnectSheet && (
+          <div className="mb-10 flex justify-center">
+            <SheetConnectForm />
+          </div>
+        )}
+
+        <div className="mb-8 max-w-3xl mx-auto">
+          <TaskCreateForm sheetId={sheetId || undefined} onTaskCreated={fetchTasks} />
         </div>
 
-        <div>
+        <div className="max-w-5xl mx-auto">
           <div className="mb-4 flex flex-wrap justify-between items-center gap-3">
             <h2 className="text-2xl font-bold text-foreground">
               Tasks ({tasks.length})
@@ -158,7 +133,7 @@ export default function DashboardPage() {
               </button>
             </div>
           </div>
-          <TaskList tasks={tasks} sheetId={sheetId} onTaskUpdated={fetchTasks} />
+          <TaskList tasks={tasks} sheetId={sheetId || undefined} onTaskUpdated={fetchTasks} />
         </div>
 
         <FilterModal

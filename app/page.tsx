@@ -1,56 +1,34 @@
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 import Link from 'next/link'
+import HomeOverview from '@/components/HomeOverview'
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="bg-card shadow-sm border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-foreground">Task Manager</h1>
-            </div>
-            <div>
-              <SignedOut>
-                <Link 
-                  href="/sign-in"
-                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  Sign In
-                </Link>
-              </SignedOut>
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <SignedOut>
           <div className="text-center py-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
-              Welcome to Task Manager
+              Welcome to JJ&apos;s Task Manager
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
               Simple task management powered by Google Sheets
             </p>
             <div className="space-x-4">
-              <Link 
+              <Link
                 href="/sign-in"
                 className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-opacity text-lg"
               >
                 Sign In
               </Link>
-              <Link 
+              <Link
                 href="/sign-up"
                 className="inline-block bg-secondary text-secondary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-opacity text-lg"
               >
                 Sign Up
               </Link>
             </div>
-            
+
             <div className="mt-12 p-6 bg-accent rounded-lg max-w-2xl mx-auto border border-border">
               <h3 className="font-semibold text-accent-foreground mb-3">Admin Login</h3>
               <p className="text-sm text-muted-foreground mb-2">
@@ -69,22 +47,9 @@ export default function Home() {
         </SignedOut>
 
         <SignedIn>
-          <div className="text-center py-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Welcome Back!
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Ready to manage your tasks?
-            </p>
-            <Link 
-              href="/dashboard"
-              className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-lg hover:opacity-90 transition-opacity text-lg font-medium"
-            >
-              Go to Dashboard →
-            </Link>
-          </div>
+          <HomeOverview />
         </SignedIn>
-      </main>
+      </div>
     </div>
   )
 }
