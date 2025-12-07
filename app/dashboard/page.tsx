@@ -97,44 +97,48 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="mb-8 max-w-3xl mx-auto">
-          <TaskCreateForm sheetId={sheetId || undefined} onTaskCreated={fetchTasks} />
-        </div>
-
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-4 flex flex-wrap justify-between items-center gap-3">
-            <h2 className="text-2xl font-bold text-foreground">
-              Tasks ({tasks.length})
-            </h2>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setIsFilterModalOpen(true)}
-                className="text-sm px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
-              >
-                <span>🔍</span>
-                <span>Filters</span>
-                {(filters.status.length > 0 || filters.relevancy || filters.dateRange || filters.project) && (
-                  <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
-                    {[
-                      filters.status.length,
-                      filters.relevancy ? 1 : 0,
-                      filters.dateRange ? 1 : 0,
-                      filters.project ? 1 : 0
-                    ].reduce((a, b) => a + b, 0)}
-                  </span>
-                )}
-              </button>
-              <button
-                onClick={fetchTasks}
-                className="text-sm px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
-              >
-                <span>🔄</span>
-                <span>Refresh</span>
-              </button>
+        {sheetId && (
+          <>
+            <div className="mb-8 max-w-3xl mx-auto">
+              <TaskCreateForm sheetId={sheetId} onTaskCreated={fetchTasks} />
             </div>
-          </div>
-          <TaskList tasks={tasks} sheetId={sheetId || undefined} onTaskUpdated={fetchTasks} />
-        </div>
+
+            <div className="max-w-5xl mx-auto">
+              <div className="mb-4 flex flex-wrap justify-between items-center gap-3">
+                <h2 className="text-2xl font-bold text-foreground">
+                  Tasks ({tasks.length})
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setIsFilterModalOpen(true)}
+                    className="text-sm px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                  >
+                    <span>🔍</span>
+                    <span>Filters</span>
+                    {(filters.status.length > 0 || filters.relevancy || filters.dateRange || filters.project) && (
+                      <span className="bg-primary text-primary-foreground text-xs px-1.5 py-0.5 rounded-full">
+                        {[
+                          filters.status.length,
+                          filters.relevancy ? 1 : 0,
+                          filters.dateRange ? 1 : 0,
+                          filters.project ? 1 : 0
+                        ].reduce((a, b) => a + b, 0)}
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    onClick={fetchTasks}
+                    className="text-sm px-3 py-1.5 bg-secondary text-secondary-foreground rounded-lg hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                  >
+                    <span>🔄</span>
+                    <span>Refresh</span>
+                  </button>
+                </div>
+              </div>
+              <TaskList tasks={tasks} sheetId={sheetId} onTaskUpdated={fetchTasks} />
+            </div>
+          </>
+        )}
 
         <FilterModal
           key={isFilterModalOpen ? 'open' : 'closed'} // Force remount when opening

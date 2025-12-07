@@ -10,7 +10,7 @@ export const createTaskSchema = z.object({
 
 export const updateTaskSchema = z.object({
   task_text: z.string().min(1).max(500).optional(),
-  status: z.string().optional(),
+  status: z.enum(['Started', 'In Progress', 'On Hold', 'Blocked', 'Nearly Finished', 'Finished', 'Closed', 'Dropped']).optional(),
   priority: z.enum(['Low', 'Medium', 'High']).nullable().optional(),
   due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   project_id: z.string().nullable().optional()
